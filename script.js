@@ -1665,7 +1665,7 @@ const contentSetup = async (position=null) => {
                         }
                         if(sellerPrice-mmcOffer > 7000){
                             return {
-                                'updates': `${getEstDate()}-PASS $- Seller asking 7k+ (${sellerPrice})-AUTO\nPossible Offer will be ${mmcOffer}-${mmcOffer+500}`,
+                                'updates': `${getEstDate()}-PASS $- Seller asking 7k+ (${sellerPrice})-AUTO\nPossible Offer will be ${mmcOffer}-${mmcOffer+500}\n${url}`,
                                 'MMC Offer$': `${mmcOffer}`,
                                 // 'KBB Fair$' : `${kbbFairPrice}`,
                                 // 'KBB TIV' : `${kbbTradeValue}`,
@@ -1676,7 +1676,7 @@ const contentSetup = async (position=null) => {
                             }
                         }else{
                             return {
-                                'updates': `${getEstDate()}-OFFER- ${mmcOffer}-${mmcOffer+500}-AUTO\nSeller asking ${sellerPrice}`,
+                                'updates': `${getEstDate()}-OFFER- ${mmcOffer}-${mmcOffer+500}-AUTO\nSeller asking ${sellerPrice}\n${url}`,
                                 'status': 'Initial Offer',
                                 'MMC Offer$': `${mmcOffer}`,
                                 // 'KBB Fair$' : `${kbbFairPrice}`,
