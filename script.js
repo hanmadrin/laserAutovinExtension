@@ -1639,7 +1639,7 @@ const contentSetup = async (position=null) => {
                 const series = info.series;
                 const url = info.url;
 
-                const kbb = document.querySelector("td#kbb_trade_vgood_adj");
+                const kbb = document.querySelector("td#kbb_misc_fpp_adj");
                 const jd = document.querySelector("td#nada_retail_rtl_adj");
                 if(kbb!=null && jd!=null){
                     const kbbPrice = kbb.textContent*1;
