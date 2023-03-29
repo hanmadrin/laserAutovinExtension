@@ -1645,7 +1645,7 @@ const contentSetup = async (position=null) => {
                 if(kbb!=null && jd!=null){
                     const laserSeriesSelection = async () => {
                         const seriesInput = document.querySelector("#trim_select");
-                        if(!seriesInput) return 'Laser provided a fixed series';
+                        if(!seriesInput) return 'series provided';
                         // const inputHolder = seriesInput.values;
                         const seriesOptions = seriesInput.children;
                         const changeAndWaitForUpdate = async()=>{
