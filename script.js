@@ -1645,7 +1645,7 @@ const contentSetup = async (position=null) => {
                 if(kbb!=null && jd!=null){
                     const laserSeriesSelection = async () => {
                         const seriesInput = document.querySelector("#trim_select");
-                        if(!seriesInput) return;
+                        if(!seriesInput) return 'Laser provided a fixed series';
                         // const inputHolder = seriesInput.values;
                         const seriesOptions = seriesInput.children;
                         const changeAndWaitForUpdate = async()=>{
@@ -1716,7 +1716,7 @@ const contentSetup = async (position=null) => {
                             
                     
                         
-                        return '';
+                        return 'No Series Rules to follow';
                     }
                     const seriesSelected = await laserSeriesSelection();
                     const kbbPrice = document.querySelector("td#kbb_misc_fpp_adj").textContent*1;
