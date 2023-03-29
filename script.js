@@ -1512,6 +1512,7 @@ const popupSetup = async () => {
     });
     document.body.appendChild(saveButton);
 };
+
 const contentSetup = async (position=null) => {
     console.log(window.location.href);
     let mondayItem = await mondayItemDB.GET();
@@ -1629,7 +1630,7 @@ const contentSetup = async (position=null) => {
             }
         case 'suggestItem':
             mondayItem = await mondayItemDB.GET();
-            const appraisalResult = (info)=>{
+            const appraisalResult = async (info)=>{
                 // let re
                 const vin = info.vin;
                 const mileage = info.mileage;
@@ -1642,14 +1643,91 @@ const contentSetup = async (position=null) => {
                 const kbb = document.querySelector("td#kbb_misc_fpp_adj");
                 const jd = document.querySelector("td#nada_retail_rtl_adj");
                 if(kbb!=null && jd!=null){
-                    const kbbPrice = kbb.textContent*1;
-                    const jdPriceValue = jd.textContent*1;
+                    const laserSeriesSelection = async () => {
+                        const seriesInput = document.querySelector("#trim_select");
+                        if(!seriesInput) return;
+                        const inputHolder = seriesInput.values;
+                        const seriesOptions = inputHolder.children;
+                        const changeAndWaitForUpdate = async()=>{
+                            seriesInput.dispatchEvent(new Event('change'));
+                            while(document.querySelector("#trim_select").value!=document.querySelector("#kbb_select_trim").value){
+                                await sleep(5000);
+                            }
+                        }
+                        // if(seriesInput.value=='' || seriesInput.value==null){
+                        //     for(let i=0;i<seriesOptions.length;i++){
+                        //         if(series==null) break;
+                        //         const seriesOption = seriesOptions[i];
+                        //         if(seriesOption.textContent!='' && seriesOption.textContent!= ' ' && seriesOption.textContent!= null){
+                        //             if(seriesOption.textContent.toLowerCase()==series.toLowerCase()){
+                        //                 const result =`Manually selected series using lead verifier provided series. Selected Series ${seriesOption.textContent}`;
+                        //                 seriesOption.selected = true;
+                        //                 // distpatch even change
+                        //                 await changeAndWaitForUpdate();
+                        //                 return result;
+                        //             }
+                        //         }
+                        //     }
+                        // }
+                        // vehicle title selection
+                        // for(let i=0;i<seriesOptions.length;i++){
+                        //     const seriesOption = seriesOptions[i];
+                        //     if(seriesOption.textContent!='' && seriesOption.textContent!= ' ' && seriesOption.textContent!= null){
+                        //         if(seriesOption.textContent.split(' ').length==1 && vehicle.toLowerCase().split((' ')).includes(seriesOption.textContent.toLowerCase())){
+                        //             const result =`Manually selected series using Vehicle title. Selected Series ${seriesOption.textContent}`;
+                        //             seriesOption.selected = true;
+                        //             await changeAndWaitForUpdate();
+                        //             return result;
+                        //         }
+                        //         if(seriesOption.textContent.split(' ').length>1 && vehicle.toLowerCase().match(new RegExp(seriesOption.textContent.toLowerCase().split(' ').join('|'),'gi'))){
+                        //             const result =`Manually selected series using Vehicle title. Selected Series ${seriesOption.textContent}`;
+                        //             seriesOption.selected = true;
+                        //             await changeAndWaitForUpdate();
+                        //             return result;
+                        //         }
+                        //     }
+                        // }
+                        //exception rules
+                        for(let i=0;i<seriesOptions.length;i++){
+                            const seriesOption = seriesOptions[i];
+                            if(seriesOption.textContent!='' && seriesOption.textContent!= ' ' && seriesOption.textContent!= null){
+                                //depends on vehicle title
+                                if(vehicle.match(/(^)Ford.+(((F?:\s|-)(?:150|250|350|))|Maverick|Ranger|Lightening)/gi) && seriesOption.textContent.toLowerCase().includes('xlt')){
+                                    const result =`Manually selected series using ford exception rule. Selected Series ${seriesOption.textContent}`;
+                                    seriesOption.selected = true;
+                                    await changeAndWaitForUpdate();
+                                    return result;
+                                }
+                                if(vehicle.match(/(^)Nissan/gi) && seriesOption.textContent.toLowerCase().includes('SV Sport')){
+                                    const result =`Manually selected series using nissan exception rule. Selected Series ${seriesOption.textContent}`;
+                                    seriesOption.selected = true;
+                                    await changeAndWaitForUpdate();
+                                    return result;
+                                }
+                                // depends on vauto values
+                                if(document.querySelector('input[value="Jeep"]') && document.querySelector('input[value="Grand Cherokee"') && seriesOption.textContent.toLowerCase().includes('Laredo Sport')){
+                                    const result =`Manually selected series using jeep exception rule. Selected Series ${seriesOption.textContent}`;
+                                    seriesOption.selected = true;
+                                    await changeAndWaitForUpdate();
+                                    return result;
+                                }
+                            }
+                        }
+                            
+                    
+                        
+                        return '';
+                    }
+                    const seriesSelected = await laserSeriesSelection();
+                    const kbbPrice = document.querySelector("td#kbb_misc_fpp_adj").textContent*1;
+                    const jdPriceValue = document.querySelector("td#nada_retail_rtl_adj").textContent*1;
                     if(isNaN(kbbPrice) || isNaN(jdPriceValue)){
                         return {
-                            'updates': `-Manual- Couldn't get values`,
+                            'updates': `-Manual- Couldn't get values\n${seriesSelected}`,
                             'status': 'Manual',
                         };
                     }else{
+                        
                         const certificationCost = calculateCertificationCost(state);
                         const reconditioningCost = 400;
                         const profit = 2000;
@@ -1665,7 +1743,7 @@ const contentSetup = async (position=null) => {
                         }
                         if(sellerPrice-mmcOffer > 7000){
                             return {
-                                'updates': `${getEstDate()}-PASS $- Seller asking 7k+ (${sellerPrice})-AUTO\nPossible Offer will be ${mmcOffer}-${mmcOffer+500}\n${url}`,
+                                'updates': `${getEstDate()}-PASS $- Seller asking 7k+ (${sellerPrice})-AUTO\nPossible Offer will be ${mmcOffer}-${mmcOffer+500}\n${url}\n${seriesSelected}`,
                                 'MMC Offer$': `${mmcOffer}`,
                                 // 'KBB Fair$' : `${kbbFairPrice}`,
                                 // 'KBB TIV' : `${kbbTradeValue}`,
@@ -1676,7 +1754,7 @@ const contentSetup = async (position=null) => {
                             }
                         }else{
                             return {
-                                'updates': `${getEstDate()}-OFFER- ${mmcOffer}-${mmcOffer+500}-AUTO\nSeller asking ${sellerPrice}\n${url}`,
+                                'updates': `${getEstDate()}-OFFER- ${mmcOffer}-${mmcOffer+500}-AUTO\nSeller asking ${sellerPrice}\n${url}\n${seriesSelected}`,
                                 'status': 'Initial Offer',
                                 'MMC Offer$': `${mmcOffer}`,
                                 // 'KBB Fair$' : `${kbbFairPrice}`,
@@ -1721,7 +1799,7 @@ const contentSetup = async (position=null) => {
                         console.log('program should have logged in by now');
                         return false;
                     }
-                    mondayItem.local.result = appraisalResult(mondayItem.local.item);
+                    mondayItem.local.result = await appraisalResult(mondayItem.local.item);
                     if(mondayItem.server.delete){
                         // https://mvs.laserappraiserservices.com/mvs/vehicleList?pageAction=vinDelete&vin=JTDKARFP3L3127584&deviceId=40F5AD23-510E-451F-A162-D56BC8B2D175
                         const url = new URL(fixedData.urls.baseUrl);
@@ -1762,16 +1840,16 @@ const contentSetup = async (position=null) => {
                 const isItemActiveOnChatData = await isItemActiveOnChat(`${(await mondayItemDB.GET()).id}`);
                 if(isItemActiveOnChatData.status){
                     console.log('item belongs to chat');
-                    if(appraisalResult.status=='Initial Offer' || appraisalResult.status=='Pass $'){
+                    if(result.status=='Initial Offer' || result.status=='Pass $'){
                         const newStatusesAfetrAutomatedMessage = {
                             'Initial Offer': 'MSG 1st Offer',
                             'Pass $': 'Told To Pass'
                         };
                         let messageCode  = '';
-                        if(appraisalResult.status=='Initial Offer'){
+                        if(result.status=='Initial Offer'){
                             const localMondayItem = (await mondayItemDB.GET()).monday;
                             const item_price = localMondayItem['Price$'];
-                            const mmc_price = appraisalResult['MMC Offer$'];
+                            const mmc_price = result['MMC Offer$'];
                             console.log(`item price: ${item_price}`);
                             console.log(`mmc price: ${mmc_price}`);
                             if(item_price-mmc_price<2500){
@@ -1779,7 +1857,7 @@ const contentSetup = async (position=null) => {
                             }else{
                                 messageCode = 'initialOfferMessage';
                             }
-                        }else if(appraisalResult.status=='Pass $'){
+                        }else if(result.status=='Pass $'){
                             messageCode = 'pricePassMessage';
                         }
                         // change number into number with comma
@@ -1788,11 +1866,11 @@ const contentSetup = async (position=null) => {
                             item_id: `${(await mondayItemDB.GET()).monday.id}`,
                             messageCode: messageCode,
                             variables: {
-                                '[[MMC_OFFER]]': `${appraisalResult['MMC Offer$']}`.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
+                                '[[MMC_OFFER]]': `${result['MMC Offer$']}`.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
                             }
                         });
                         console.log(setAutomatedOfferMessageResult);
-                        appraisalResult.status = newStatusesAfetrAutomatedMessage[appraisalResult.status];
+                        result.status = newStatusesAfetrAutomatedMessage[result.status];
                         console.log('item belongs to chat and need auto offer message');
                     }else{
                         console.log('this item is from chat but do not need auto offer');
