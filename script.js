@@ -1646,8 +1646,8 @@ const contentSetup = async (position=null) => {
                     const laserSeriesSelection = async () => {
                         const seriesInput = document.querySelector("#trim_select");
                         if(!seriesInput) return;
-                        const inputHolder = seriesInput.values;
-                        const seriesOptions = inputHolder.children;
+                        // const inputHolder = seriesInput.values;
+                        const seriesOptions = seriesInput.children;
                         const changeAndWaitForUpdate = async()=>{
                             seriesInput.dispatchEvent(new Event('change'));
                             while(document.querySelector("#trim_select").value!=document.querySelector("#kbb_select_trim").value){
