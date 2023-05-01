@@ -915,7 +915,7 @@ const dynamicAppraisal = async(info)=>{
             }else{
                 if(sellerPrice-mmcOffer > 5000){
                     result = {
-                        'updates': `${getEstDate()}-PASS $- Seller asking 7k+ (${sellerPrice})-AUTO\nPossible Offer will be ${mmcOffer}-${mmcOffer+500}`,
+                        'updates': `${getEstDate()}-PASS $- Seller asking 5k+ (${sellerPrice})-AUTO\nPossible Offer will be ${mmcOffer}-${mmcOffer+500}`,
                         'MMC Offer$': `${mmcOffer}`,
                         'KBB Fair$' : `${kbbFairPrice}`,
                         'KBB TIV' : `${kbbTradeValue}`,
@@ -1743,7 +1743,7 @@ const contentSetup = async (position=null) => {
                         }
                         if(sellerPrice-mmcOffer > 5000){
                             return {
-                                'updates': `${getEstDate()}-PASS $- Seller asking 7k+ (${sellerPrice})-AUTO\nPossible Offer will be ${mmcOffer}-${mmcOffer+500}\n${url}\n${seriesSelected}`,
+                                'updates': `${getEstDate()}-PASS $- Seller asking 5k+ (${sellerPrice})-AUTO\nPossible Offer will be ${mmcOffer}-${mmcOffer+500}\n${url}\n${seriesSelected}`,
                                 'MMC Offer$': `${mmcOffer}`,
                                 // 'KBB Fair$' : `${kbbFairPrice}`,
                                 // 'KBB TIV' : `${kbbTradeValue}`,
