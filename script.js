@@ -1749,7 +1749,12 @@ const contentSetup = async (position=null) => {
                         if(sellerPrice-nearest500AppraisedValue < 2000){
                             mmcOffer = Math.floor((sellerPrice-2000)/500)*500;
                         }
-                        if(sellerPrice-mmcOffer > 5000){
+                        if(mmcOffer<=0){
+                            return {
+                                'updates': `-Manual- Program says mmc offer is zero or less`,
+                                'status': 'Manual',
+                            };
+                        }else if(sellerPrice-mmcOffer > 5000){
                             return {
                                 'updates': `${getEstDate()}-PASS $- Seller asking 5k+ (${sellerPrice})-AUTO\nPossible Offer will be ${mmcOffer}-${mmcOffer+500}\n${url}\n${seriesSelected}`,
                                 'MMC Offer$': `${mmcOffer}`,
