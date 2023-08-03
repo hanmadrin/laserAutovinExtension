@@ -864,6 +864,7 @@ const dynamicAppraisal = async(info)=>{
         console.log(carfaxCheckValues);
     }
     if(carfaxCheckValues==null){
+        throw new Error('Carfax check failed');
         return {
             'updates': `-Manual- Couldn't get autocheck values`,
             'status': 'Manual',
@@ -1722,6 +1723,13 @@ const contentSetup = async (position=null) => {
                     const kbbPrice = document.querySelector("td#kbb_misc_fpp_adj").textContent*1;
                     const jdPriceValue = document.querySelector("td#nada_retail_rtl_adj").textContent*1;
                     if(isNaN(kbbPrice) || isNaN(jdPriceValue)){
+                        throw new Error('Could not get values');
+                        return {
+                            'updates': `-Manual- Couldn't get values\n${seriesSelected}`,
+                            'status': 'Manual',
+                        };
+                    }else if(kbbPrice==0 || jdPriceValue==0){
+                        // throw new Error('Could not get values');
                         return {
                             'updates': `-Manual- Couldn't get values\n${seriesSelected}`,
                             'status': 'Manual',
@@ -1766,6 +1774,7 @@ const contentSetup = async (position=null) => {
                         }
                     }
                 }else{
+                    throw new Error('Could not get values');
                     return {
                         'updates': `-Manual- Couldn't get values`,
                         'status': 'Manual',
@@ -1837,6 +1846,8 @@ const contentSetup = async (position=null) => {
             mondayItem = await mondayItemDB.GET();
             if(mondayItem.local.step=='final'){
                 const result = mondayItem.local.result;
+                console.log(result);
+                return;
                 const isItemActiveOnChatData = await isItemActiveOnChat(`${(await mondayItemDB.GET()).id}`);
                 if(isItemActiveOnChatData.status){
                     console.log('item belongs to chat');
