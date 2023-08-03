@@ -1846,8 +1846,8 @@ const contentSetup = async (position=null) => {
             mondayItem = await mondayItemDB.GET();
             if(mondayItem.local.step=='final'){
                 const result = mondayItem.local.result;
-                console.log(result);
-                return;
+                // console.log(result);
+                // return;
                 const isItemActiveOnChatData = await isItemActiveOnChat(`${(await mondayItemDB.GET()).id}`);
                 if(isItemActiveOnChatData.status){
                     console.log('item belongs to chat');
