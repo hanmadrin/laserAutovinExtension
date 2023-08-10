@@ -1779,7 +1779,7 @@ const contentSetup = async (position=null) => {
                         }
                     }
                 }else{
-                    throw new Error('Could not get values');
+                    // throw new Error('Could not get values');
                     return {
                         'updates': `-Manual- Couldn't get values`,
                         'status': 'Manual',
