@@ -1723,7 +1723,7 @@ const contentSetup = async (position=null) => {
                     const kbbPrice = document.querySelector("td#kbb_misc_fpp_adj").textContent*1;
                     const jdPriceValue = document.querySelector("td#nada_retail_rtl_adj").textContent*1;
                     if(isNaN(kbbPrice) || isNaN(jdPriceValue)){
-                        throw new Error('Could not get values');
+                        // throw new Error('Could not get values');
                         return {
                             'updates': `-Manual- Couldn't get values\n${seriesSelected}`,
                             'status': 'Manual',
