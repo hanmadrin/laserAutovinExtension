@@ -1080,7 +1080,9 @@ const getSingleItemFromMonday = async(serverItem)=>{
                 }
                 column_values{
                     value,
-                    text
+                    column{
+                        title
+                    }
                 }
             }
 
@@ -1102,8 +1104,10 @@ const getSingleItemFromMonday = async(serverItem)=>{
         const columnValues = item.column_values;
         const validItemValues = {};
         for(let i=0;i<columnValues.length;i++){
-            if(validItemTitles.includes(columnValues[i].text)){
-                validItemValues[columnValues[i].text] = columnValues[i].value;
+            // if(validItemTitles.includes(columnValues[i].text)){
+            if(validItemTitlesId[columnValues[i].column.title]!=null){
+                // validItemValues[columnValues[i].text] = columnValues[i].value;
+                validItemValues[columnValues[i].column.title] = columnValues[i].value;
             }
         }
         const keys = Object.keys(validItemValues);
