@@ -1094,6 +1094,7 @@ const getSingleItemFromMonday = async(serverItem)=>{
     // board is not 1255820475
     if(items.length==0 && mondayResponse.data.items[0]?.board?.id!=globalData.boardId){
         // window.location.reload();
+        console.log('board is not 1255820475');
         return null;
     }else{
         const item = items[0];
