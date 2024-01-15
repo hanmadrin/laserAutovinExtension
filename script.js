@@ -1097,6 +1097,7 @@ const getSingleItemFromMonday = async(serverItem)=>{
         console.log('board is not 1255820475');
         return null;
     }else{
+        console.log('board test passed');
         const item = items[0];
         const columnValues = item.column_values;
         const validItemValues = {};
