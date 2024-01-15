@@ -1168,18 +1168,18 @@ const collectNewMessageFromChat = async () => {
         }
     });
     const dashBoardData = await dashBoardDataJson.json();
-    const fb_ids = dashBoardData.map((item)=>item.fb_id);
-    const sellerRepliedItemId = {};
-    for(let i = 0; i < dashBoardData.length; i++){
-        const item = dashBoardData[i];
-        const fb_id = item.fb_id;
-        sellerRepliedItemId[fb_id] = item.sellerReplies;
-        item.sellerReplies = 0;
-    }
-    const sellerRepliedItemIds = [];
-    for(const fb_id in sellerRepliedItemId){
-        sellerRepliedItemIds.push(...sellerRepliedItemId[fb_id]);
-    }
+    // const fb_ids = dashBoardData.map((item)=>item.fb_id);
+    // const sellerRepliedItemId = {};
+    // for(let i = 0; i < dashBoardData.length; i++){
+    //     const item = dashBoardData[i];
+    //     const fb_id = item.fb_id;
+    //     sellerRepliedItemId[fb_id] = item.sellerReplies;
+    //     item.sellerReplies = 0;
+    // }
+    // const sellerRepliedItemIds = [];
+    // for(const fb_id in sellerRepliedItemId){
+    //     sellerRepliedItemIds.push(...sellerRepliedItemId[fb_id]);
+    // }
     // const query = `
     //         query{
     //             boards(ids:[${globalData.borEffortBoardId}]){
@@ -1189,17 +1189,17 @@ const collectNewMessageFromChat = async () => {
     //             }
     //         }
     //     `;
-    const query = `
-        query{
-            items(ids:[${sellerRepliedItemIds.map(id=>`${id}`)}]){
-                id,
-                board{
-                    id
-                }
-            }
-        }
-    `;
-    const mondayItemsData = await mondayFetch(query);
+    // const query = `
+    //     query{
+    //         items(ids:[${sellerRepliedItemIds.map(id=>`${id}`)}]){
+    //             id,
+    //             board{
+    //                 id
+    //             }
+    //         }
+    //     }
+    // `;
+    // const mondayItemsData = await mondayFetch(query);
     // const mondayItemsdata = await mondayItemsDataJson.json();
     // const activeSellerRepliedItemIds = mondayItemsData.data.boards[0].items.map(item=>item.id);
     const borEffortBoardId = globalData.borEffortBoardId;
@@ -1586,7 +1586,7 @@ const contentSetup = async (position=null) => {
                     const item_ids = await getAutoVinIds();
                     console.log(item_ids);
                     const response = await serverResponse({directory:'uploadNewItems',item_ids});
-                    await collectNewMessageFromChat();
+                    // await collectNewMessageFromChat();
                     await contentSetup('noItemInLocalDB');
                     return false;
                 }else if(newItem.action=='workOnItem'){
