@@ -1090,7 +1090,7 @@ const getSingleItemFromMonday = async(serverItem)=>{
     // const items = mondayResponse.data.boards[0].items;
     const items = mondayResponse.data.items;
     console.log(items);
-    throw new Error('test');
+    // throw new Error('test');
     // board is not 1255820475
     if(items.length==0 && mondayResponse.data.items[0]?.board?.id!=globalData.boardId){
         // window.location.reload();
@@ -1432,7 +1432,13 @@ const getAutoVinIds = async()=>{
     const response = await mondayFetch(query);
     const data = response.data.boards[0].items_page.items;
     // ids that has status Auto VIn
+    console.log(data);
+    data.map(item=>{
+        console.log(JSON.parse(item.column_values[0].value)) 
+        console.log(JSON.parse(item.column_values[0].value).index)
+    })
     const itemsFiltered = data.filter(item=>(JSON.parse(item.column_values[0].value)).index === 105).map(item=>item.id);
+    console.log(itemsFiltered)
     return itemsFiltered;
 }
 const isItemActiveOnChat = async (item_id)=>{
