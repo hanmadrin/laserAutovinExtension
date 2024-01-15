@@ -1233,6 +1233,7 @@ const calculateMondayItemRawVin = async () => {
     const vehicle = mondayItem['Vehicle'];
     const series = mondayItem['Series'];
     const url = mondayItem['URL'];
+    console.log('calculating item',mondayItem);
     // const localVins = await mondayItemVinDB.GET();
     // const done = mondayItem['BOT Status'];
     // const done = localVins.includes(vin);
