@@ -1030,7 +1030,7 @@ const getItemFromMonday = async (item_id) => {
             items_page_by_column_values(board_id: ${boardId}, columns:[{column_id: "status", column_value: "Auto Vin"}], limit:1) {
                 items{
                     id,
-                    column_values(){
+                    column_values{
                         value,
                         text
                     }
@@ -1078,7 +1078,7 @@ const getSingleItemFromMonday = async(serverItem)=>{
                 board{
                     id
                 }
-                column_values(){
+                column_values{
                     value,
                     text
                 }
