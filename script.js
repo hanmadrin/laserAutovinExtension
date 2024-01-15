@@ -993,7 +993,7 @@ const globalData = {
     borEffortBoardId: '1250230293',
     // boardId: '2886859118'
 }
-const mondayFetch = async (query) => {
+const mondayFetch = async (query,apiVersion="2024-01") => {
     const mondayResponse = await fetch (
         `https://api.monday.com/v2`,
         {
@@ -1001,8 +1001,9 @@ const mondayFetch = async (query) => {
             method: 'post',
             headers:{
                 'Content-Type': 'application/json',
-                'Authorization': 'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjE3MjU1MTMxNiwidWlkIjozMDI3MzE5NCwiaWFkIjoiMjAyMi0wNy0yN1QyMzowMzowNC4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6ODg0NzExMCwicmduIjoidXNlMSJ9.OsVnuCUSnm-FF21sjAND10cWEKN9-UIqIkNx6Rz8Bfo'
+                'Authorization': 'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjE3MjU1MTMxNiwidWlkIjozMDI3MzE5NCwiaWFkIjoiMjAyMi0wNy0yN1QyMzowMzowNC4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6ODg0NzExMCwicmduIjoidXNlMSJ9.OsVnuCUSnm-FF21sjAND10cWEKN9-UIqIkNx6Rz8Bfo',
                 // 'Authorization' : 'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjE1NTQ3NzM5NCwidWlkIjoyMTc2MjYwNiwiaWFkIjoiMjAyMi0wNC0xMlQxMzo0NjozOS4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6ODg0NzExMCwicmduIjoidXNlMSJ9.mpXq7PtWbmneakwja8iB091bZFnElYif7Ji1IyBmmSA'
+                'API-Version' : apiVerison
             },
             body: JSON.stringify({query})
         }
@@ -1013,33 +1014,49 @@ const getItemFromMonday = async (item_id) => {
     // const getNewItemId = await fetch('');
     const boardId = globalData.boardId;
 
+    // const itemQuery = `
+    //     query{
+    //         items_by_column_values (board_id: ${boardId}, column_id: "status", column_value: "Auto Vin",limit:1) {
+    //             id,
+    //             column_values(){
+    //                 value,
+    //                 title
+    //             }
+    //         }
+    //     }
+    // `;
     const itemQuery = `
         query{
-            items_by_column_values (board_id: ${boardId}, column_id: "status", column_value: "Auto Vin",limit:1) {
-                id,
-                column_values(){
-                    value,
-                    title
+            items_page_by_column_values(board_id: ${boardId}, columns:[{column_id: "status", column_value: "Auto Vin"}], limit:1) {
+                items{
+                    id,
+                    column_values(){
+                        value,
+                        text
+                    }
                 }
             }
-        }
     `;
     let itemCount = 0;
     while(itemCount==0){
         let titleCheckData = await mondayFetch(itemQuery); 
-        if(titleCheckData.data.items_by_column_values.length==0){
+        // if(titleCheckData.data.items_by_column_values.length==0){
+        if(titleCheckData.data.items_page_by_column_values.items.length==0){
             await sleep(300000); 
             window.location.reload();
             return false;
         }else{
-            itemCount = titleCheckData.data.items_by_column_values.length;
+            // itemCount = titleCheckData.data.items_by_column_values.length;
+            itemCount = titleCheckData.data.items_page_by_column_values.items.length;
             const validItemValues = {};
             validItemValues.status = '"Auto Vin"';
-            const itemValues = titleCheckData.data.items_by_column_values[itemCount-1].column_values;
-            validItemValues.id = titleCheckData.data.items_by_column_values[itemCount-1].id;
+            // const itemValues = titleCheckData.data.items_by_column_values[itemCount-1].column_values;
+            const itemValues = titleCheckData.data.items_page_by_column_values.items[itemCount-1].column_values;
+            // validItemValues.id = titleCheckData.data.items_by_column_values[itemCount-1].id;
+            validItemValues.id = titleCheckData.data.items_page_by_column_values.items[itemCount-1].id;
             for(let i=0;i<itemValues.length;i++){
-                if(validItemTitles.includes(itemValues[i].title)){
-                    validItemValues[itemValues[i].title] = itemValues[i].value;
+                if(validItemTitles.includes(itemValues[i].text)){
+                    validItemValues[itemValues[i].text] = itemValues[i].value;
                 }
             }
             const keys = Object.keys(validItemValues);
@@ -1054,21 +1071,26 @@ const getItemFromMonday = async (item_id) => {
 }
 const getSingleItemFromMonday = async(serverItem)=>{
     const id = serverItem.item_id;
+    // 1255820475
     const query = `
         query{
-            boards(ids:[1255820475]){
-                items(ids:[${id}]){
-                    column_values(){
-                        value,
-                        title
-                    }
+            items(ids:[${id}]){
+                board{
+                    id
+                }
+                column_values(){
+                    value,
+                    text
                 }
             }
+
         }
     `;
     const mondayResponse = await mondayFetch(query);
-    const items = mondayResponse.data.boards[0].items;
-    if(items.length==0){
+    // const items = mondayResponse.data.boards[0].items;
+    const items = mondayResponse.data.items;
+    // board is not 1255820475
+    if(items.length==0 && mondayResponse.data.items[0]?.board?.id!=globalData.boardId){
         // window.location.reload();
         return null;
     }else{
@@ -1076,8 +1098,8 @@ const getSingleItemFromMonday = async(serverItem)=>{
         const columnValues = item.column_values;
         const validItemValues = {};
         for(let i=0;i<columnValues.length;i++){
-            if(validItemTitles.includes(columnValues[i].title)){
-                validItemValues[columnValues[i].title] = columnValues[i].value;
+            if(validItemTitles.includes(columnValues[i].text)){
+                validItemValues[columnValues[i].text] = columnValues[i].value;
             }
         }
         const keys = Object.keys(validItemValues);
@@ -1099,7 +1121,7 @@ const updateItemToMonday = async(updateData)=>{
     if(updateData.updates!=null){
         const updatesJson = JSON.stringify(updateData.updates);
         const updatesQuery = `
-            mutation {
+            mutation{
                 create_update (item_id: ${itemId}, body: ${updatesJson}) {
                     id
                 }
@@ -1125,7 +1147,7 @@ const updateItemToMonday = async(updateData)=>{
 
         updateColumnValuesJson = JSON.stringify(`${updateColumnValuesJson}`)
         const updateColumnQuery = `
-            mutation {
+            mutation{
                 change_multiple_column_values(item_id:${itemId}, board_id:${boardId}, column_values: ${updateColumnValuesJson}) {
                 id
                 }
@@ -1158,18 +1180,35 @@ const collectNewMessageFromChat = async () => {
     for(const fb_id in sellerRepliedItemId){
         sellerRepliedItemIds.push(...sellerRepliedItemId[fb_id]);
     }
+    // const query = `
+    //         query{
+    //             boards(ids:[${globalData.borEffortBoardId}]){
+    //                 items(limit:1000,ids:[${sellerRepliedItemIds.map(id=>`${id}`)}]){
+    //                     id
+    //                 }
+    //             }
+    //         }
+    //     `;
     const query = `
-            query{
-                boards(ids:[${globalData.borEffortBoardId}]){
-                    items(limit:1000,ids:[${sellerRepliedItemIds.map(id=>`${id}`)}]){
-                        id
-                    }
+        query{
+            items(ids:[${sellerRepliedItemIds.map(id=>`${id}`)}]){
+                id,
+                board{
+                    id
                 }
             }
-        `;
+        }
+    `;
     const mondayItemsData = await mondayFetch(query);
     // const mondayItemsdata = await mondayItemsDataJson.json();
-    const activeSellerRepliedItemIds = mondayItemsData.data.boards[0].items.map(item=>item.id);
+    // const activeSellerRepliedItemIds = mondayItemsData.data.boards[0].items.map(item=>item.id);
+    const borEffortBoardId = globalData.borEffortBoardId;
+    const activeSellerRepliedItemIds = mondayItemsData.data.items.map(item=>{
+        if(item.board.id==borEffortBoardId){
+            return item.id;
+        }
+    });
+
     console.log(activeSellerRepliedItemIds);
     if(activeSellerRepliedItemIds.length>0){
         await fetch(`${domain}/vauto/collectedNewMessageFromChat`,{
@@ -1377,17 +1416,19 @@ const getAutoVinIds = async()=>{
     const query = `
         query{
             boards(ids:[1255820475]){
-                items(limit:1000){
-                    id
-                    column_values(ids:["status"]){
-                        value,
+                items_page(limit:500){
+                    items{
+                        id
+                        column_values(ids:["status"]){
+                            value,
+                        }
                     }
                 }
             }
         }
     `;
     const response = await mondayFetch(query);
-    const data = response.data.boards[0].items;
+    const data = response.data.boards[0].items_page.items;
     // ids that has status Auto VIn
     const itemsFiltered = data.filter(item=>(JSON.parse(item.column_values[0].value)).index === 105).map(item=>item.id);
     return itemsFiltered;
