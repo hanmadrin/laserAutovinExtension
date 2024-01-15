@@ -1089,6 +1089,8 @@ const getSingleItemFromMonday = async(serverItem)=>{
     const mondayResponse = await mondayFetch(query);
     // const items = mondayResponse.data.boards[0].items;
     const items = mondayResponse.data.items;
+    console.log(items);
+    throw new Error('test');
     // board is not 1255820475
     if(items.length==0 && mondayResponse.data.items[0]?.board?.id!=globalData.boardId){
         // window.location.reload();
