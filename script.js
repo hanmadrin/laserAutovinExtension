@@ -71,7 +71,7 @@ const calculateCertificationCost = (state)=>{
     if(farState){
         return '1100';
     }
-    return '1000';
+    return '800';
 }
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const carfaxResults = async(vin,sellerPrice)=>{
