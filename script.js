@@ -69,7 +69,7 @@ const calculateCertificationCost = (state)=>{
         return '1000';
     }
     if(farState){
-        return '1300';
+        return '1100';
     }
     return '1000';
 }
