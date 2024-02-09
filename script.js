@@ -66,7 +66,7 @@ const calculateCertificationCost = (state)=>{
     nearState = states.near.includes(state);
     farState = states.far.includes(state);
     if(nearState){
-        return '1000';
+        return '800';
     }
     if(farState){
         return '1100';
