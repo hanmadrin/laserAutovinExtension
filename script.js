@@ -1696,21 +1696,21 @@ const contentSetup = async (position=null) => {
                 const vehicle = info.vehicle;
                 const series = info.series;
                 const url = info.url;
-                {
-                    const selectElement = document.getElementById("kbb_condition");
+                // {
+                //     const selectElement = document.getElementById("kbb_condition");
 
-                    // Loop through each option to find the one with the value "Good"
-                    for (let i = 0; i < selectElement.options.length; i++) {
-                        if (selectElement.options[i].value === "VeryGood") {
-                            // Set the selectedIndex property of the select element to the index of the "Good" option
-                            selectElement.selectedIndex = i;
-                            // Trigger a change event to simulate the change
-                            const event = new Event('change');
-                            selectElement.dispatchEvent(event);
-                            break;
-                        }
-                    }
-                }
+                //     // Loop through each option to find the one with the value "Good"
+                //     for (let i = 0; i < selectElement.options.length; i++) {
+                //         if (selectElement.options[i].value === "VeryGood") {
+                //             // Set the selectedIndex property of the select element to the index of the "Good" option
+                //             selectElement.selectedIndex = i;
+                //             // Trigger a change event to simulate the change
+                //             const event = new Event('change');
+                //             selectElement.dispatchEvent(event);
+                //             break;
+                //         }
+                //     }
+                // }
                 const kbb = document.querySelector("td#kbb_misc_fpp_adj");
                 const jd = document.querySelector("td#nada_retail_rtl_adj");
                 if(kbb!=null && jd!=null){
@@ -1819,6 +1819,14 @@ const contentSetup = async (position=null) => {
                         if(sellerPrice-nearest500AppraisedValue < 2000){
                             mmcOffer = Math.floor((sellerPrice-2000)/500)*500;
                         }
+
+
+                        const kbbTradeVeryGood = document.querySelector("td#kbb_trade_vgood_adj")?.textContent*1;
+                        const nearest500KbbTradeVeryGood = Math.floor(kbbTradeVeryGood/500)*500;
+                        if(nearest500KbbTradeVeryGood!=0){
+                            mmcOffer = Math.min(mmcOffer,nearest500KbbTradeVeryGood);
+                        }
+
                         if(mmcOffer<=0){
                             return {
                                 'updates': `-Manual- Program says mmc offer is zero or less`,
