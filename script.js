@@ -1806,20 +1806,30 @@ const contentSetup = async (position=null) => {
                         };
                     }else{
                         let fromKbb = false;
-                        let extraText = `\nAprraisal without using KBB trade-in value`;
+                        extraText = [];
+                        extraText.push(`\n\tAppraisal Calculation:`);
+                        extraText.push(`\n\t\tValue Used: JD POWER Value(${jdPriceValue})`);
                         const certificationCost = calculateCertificationCost(state);
+                        extraText.push(`\n\t\tCertification Cost: ${certificationCost}`);
                         const reconditioningCost = 400;
+                        extraText.push(`\n\t\tReconditioning Cost: ${reconditioningCost}`);
                         const profit = 2000;
+                        extraText.push(`\n\t\tProfit: ${profit}`);
                         const mimimumDifference = 1000;
                         const minimumPrice = Math.min(jdPriceValue/*,kbbPrice*/);
                         const nearest500Value = Math.floor(minimumPrice/500)*500;
+                        extraText.push(`\n\t\t Nearest 500 Value: ${nearest500Value}`);
                         const askingPrice = nearest500Value-1;
+                        extraText.push(`\n\t\tAfter Subtracting 1: ${askingPrice}`);
 
                         const appraisedValue = askingPrice-certificationCost-reconditioningCost-profit;
+                        extraText.push(`\n\t\tPre Appraised Value: ${appraisedValue}`);
                         const nearest500AppraisedValue = Math.floor(appraisedValue/500)*500;
+                        extraText.push(`\n\t\tNearest 500 Appraised Value: ${nearest500AppraisedValue}`);
                         let mmcOffer = nearest500AppraisedValue;
                         if(sellerPrice-nearest500AppraisedValue < mimimumDifference){
                             mmcOffer = Math.floor((sellerPrice-mimimumDifference)/500)*500;
+                            extraText.push(`\n\t\tAfter applying minimum price difference ${mimimumDifference} mmc offer will be ${mmcOffer} as seller asking ${sellerPrice} is less than minimum difference`);
                         }
 
 
@@ -1831,16 +1841,19 @@ const contentSetup = async (position=null) => {
                         }
 
                         if(fromKbb){
-                            extraText = `\nAppraisal using KBB trade-in(Excellent) value`;                            
+                            extraText[1] = `\n\t\tValue Used: KBB Trade Excellent price ($${kbbTradeVeryGood})`;  
+                            extraText[2] = `\n\t\tNearest 500 Value: ${nearest500KbbTradeVeryGood}`;  
+                            // remove rest of the lines\
+                            extraText = extraText.slice(0,3);
                         }
                         if(mmcOffer<=0){
                             return {
-                                'updates': `-Manual- Program says mmc offer is zero or less${extraText}`,
+                                'updates': `-Manual- Program says mmc offer is zero or less${extraText.join('')}`,
                                 'status': 'Manual',
                             };
                         }else if(sellerPrice-mmcOffer > 5000){
                             return {
-                                'updates': `${getEstDate()}-PASS $- Seller asking 5k+ (${sellerPrice})-AUTO\nPossible Offer will be ${mmcOffer}-${mmcOffer+500}\n${url}\n${seriesSelected}${extraText}`,
+                                'updates': `${getEstDate()}-PASS $- Seller asking 5k+ (${sellerPrice})-AUTO\nPossible Offer will be ${mmcOffer}-${mmcOffer+500}\n${url}\n${seriesSelected}${extraText.join('')}`,
                                 'MMC Offer$': `${mmcOffer}`,
                                 // 'KBB Fair$' : `${kbbFairPrice}`,
                                 // 'KBB TIV' : `${kbbTradeValue}`,
@@ -1851,7 +1864,7 @@ const contentSetup = async (position=null) => {
                             }
                         }else{
                             return {
-                                'updates': `${getEstDate()}-OFFER- ${mmcOffer}-${mmcOffer+500}-AUTO\nSeller asking ${sellerPrice}\n${url}\n${seriesSelected}${extraText}`,
+                                'updates': `${getEstDate()}-OFFER- ${mmcOffer}-${mmcOffer+500}-AUTO\nSeller asking ${sellerPrice}\n${url}\n${seriesSelected}${extraText.join('')}`,
                                 'status': 'Initial Offer',
                                 'MMC Offer$': `${mmcOffer}`,
                                 // 'KBB Fair$' : `${kbbFairPrice}`,
