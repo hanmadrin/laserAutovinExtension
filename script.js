@@ -1835,7 +1835,7 @@ const contentSetup = async (position=null) => {
 
                         const kbbTradeVeryGood = document.querySelector("td#kbb_trade_xclt_adj")?.textContent*1;
                         const nearest500KbbTradeVeryGood = Math.floor(kbbTradeVeryGood/500)*500;
-                        if(nearest500KbbTradeVeryGood!=0){
+                        if(!(nearest500KbbTradeVeryGood==0 || isNaN(nearest500KbbTradeVeryGood)) ){
                             extraText.push(`\n\t\tKBB Trade Excellent price ($${kbbTradeVeryGood})`);  
                             extraText.push(`\n\t\tNearest 500 Value of KBB Trade Excellent price: $${nearest500KbbTradeVeryGood}`);
                             if(mmcOffer > nearest500KbbTradeVeryGood){
