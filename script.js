@@ -1790,51 +1790,57 @@ const contentSetup = async (position=null) => {
                         return 'No Series Rules to follow';
                     }
                     const seriesSelected = await laserSeriesSelection();
-                    const kbbPrice = document.querySelector("td#kbb_misc_fpp_adj").textContent*1;
+                    // const kbbPrice = document.querySelector("td#kbb_misc_fpp_adj").textContent*1;
                     const jdPriceValue = document.querySelector("td#nada_retail_rtl_adj").textContent*1;
-                    if(isNaN(kbbPrice) || isNaN(jdPriceValue)){
+                    if(/*isNaN(kbbPrice) || */isNaN(jdPriceValue)){
                         // throw new Error('Could not get values');
                         return {
                             'updates': `-Manual- Couldn't get values\n${seriesSelected}`,
                             'status': 'Manual',
                         };
-                    }else if(kbbPrice==0 || jdPriceValue==0){
+                    }else if(/*kbbPrice==0 || */jdPriceValue==0){
                         // throw new Error('Could not get values');
                         return {
                             'updates': `-Manual- Couldn't get values\n${seriesSelected}`,
                             'status': 'Manual',
                         };
                     }else{
-                        
+                        let fromKbb = false;
+                        let extraText = `\nAprraisal without using KBB trade-in value`;
                         const certificationCost = calculateCertificationCost(state);
                         const reconditioningCost = 400;
                         const profit = 2000;
-                        const minimumPrice = Math.min(jdPriceValue,kbbPrice);
+                        const mimimumDifference = 1000;
+                        const minimumPrice = Math.min(jdPriceValue/*,kbbPrice*/);
                         const nearest500Value = Math.floor(minimumPrice/500)*500;
                         const askingPrice = nearest500Value-1;
 
                         const appraisedValue = askingPrice-certificationCost-reconditioningCost-profit;
                         const nearest500AppraisedValue = Math.floor(appraisedValue/500)*500;
                         let mmcOffer = nearest500AppraisedValue;
-                        if(sellerPrice-nearest500AppraisedValue < 2000){
-                            mmcOffer = Math.floor((sellerPrice-2000)/500)*500;
+                        if(sellerPrice-nearest500AppraisedValue < mimimumDifference){
+                            mmcOffer = Math.floor((sellerPrice-mimimumDifference)/500)*500;
                         }
 
 
-                        const kbbTradeVeryGood = document.querySelector("td#kbb_trade_vgood_adj")?.textContent*1;
+                        const kbbTradeVeryGood = document.querySelector("td#kbb_trade_xclt_adj")?.textContent*1;
                         const nearest500KbbTradeVeryGood = Math.floor(kbbTradeVeryGood/500)*500;
                         if(nearest500KbbTradeVeryGood!=0){
                             mmcOffer = Math.min(mmcOffer,nearest500KbbTradeVeryGood);
+                            fromKbb = true;
                         }
 
+                        if(fromKbb){
+                            extraText = `\nAppraisal using KBB trade-in(Excellent) value`;                            
+                        }
                         if(mmcOffer<=0){
                             return {
-                                'updates': `-Manual- Program says mmc offer is zero or less`,
+                                'updates': `-Manual- Program says mmc offer is zero or less${extraText}`,
                                 'status': 'Manual',
                             };
                         }else if(sellerPrice-mmcOffer > 5000){
                             return {
-                                'updates': `${getEstDate()}-PASS $- Seller asking 5k+ (${sellerPrice})-AUTO\nPossible Offer will be ${mmcOffer}-${mmcOffer+500}\n${url}\n${seriesSelected}`,
+                                'updates': `${getEstDate()}-PASS $- Seller asking 5k+ (${sellerPrice})-AUTO\nPossible Offer will be ${mmcOffer}-${mmcOffer+500}\n${url}\n${seriesSelected}${extraText}`,
                                 'MMC Offer$': `${mmcOffer}`,
                                 // 'KBB Fair$' : `${kbbFairPrice}`,
                                 // 'KBB TIV' : `${kbbTradeValue}`,
@@ -1845,7 +1851,7 @@ const contentSetup = async (position=null) => {
                             }
                         }else{
                             return {
-                                'updates': `${getEstDate()}-OFFER- ${mmcOffer}-${mmcOffer+500}-AUTO\nSeller asking ${sellerPrice}\n${url}\n${seriesSelected}`,
+                                'updates': `${getEstDate()}-OFFER- ${mmcOffer}-${mmcOffer+500}-AUTO\nSeller asking ${sellerPrice}\n${url}\n${seriesSelected}${extraText}`,
                                 'status': 'Initial Offer',
                                 'MMC Offer$': `${mmcOffer}`,
                                 // 'KBB Fair$' : `${kbbFairPrice}`,
