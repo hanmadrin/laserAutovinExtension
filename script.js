@@ -1785,9 +1785,9 @@ const contentSetup = async (position=null) => {
                             }
                         }
                             
-                        if(seriesOptions.length!=0){
+                        if(seriesOptions.length>1){
                             const result =`Manually selected series using first option. Selected Series ${seriesOptions[0].textContent}`;
-                            seriesOptions[0].selected = true;
+                            seriesOptions[1].selected = true;
                             await changeAndWaitForUpdate();
                             return result;
                         }
