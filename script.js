@@ -1687,6 +1687,7 @@ const contentSetup = async (position=null) => {
             }
         case 'suggestItem':
             mondayItem = await mondayItemDB.GET();
+            await sleep(3000);
             const appraisalResult = async (info)=>{
                 // let re
                 const vin = info.vin;
@@ -1721,8 +1722,9 @@ const contentSetup = async (position=null) => {
                         const seriesOptions = seriesInput.children;
                         const changeAndWaitForUpdate = async()=>{
                             seriesInput.dispatchEvent(new Event('change'));
-                            while(document.querySelector("#trim_select").value!=document.querySelector("#kbb_select_trim").value){
+                            while(!(document.querySelector("#trim_select").value==document.querySelector("#kbb_select_trim")?.value  || document.querySelector("#trim_select").value==document.querySelector("#nada_select_trim")?.value)){
                                 await sleep(5000);
+                                console.log('inside loop')
                             }
                         }
                         // if(seriesInput.value=='' || seriesInput.value==null){
@@ -1786,15 +1788,18 @@ const contentSetup = async (position=null) => {
                         }
                             
                         if(seriesOptions.length>1){
-                            const result =`Manually selected series using first option. Selected Series ${seriesOptions[0].textContent}`;
-                            seriesOptions[1].selected = true;
-                            await changeAndWaitForUpdate();
+                            const result =`Manually selected series using first option. Selected Series ${seriesOptions[1].textContent}`;
+                            if(!seriesOptions[0].selected){
+                                seriesOptions[1].selected = true;
+                                await changeAndWaitForUpdate();
+                            }
                             return result;
                         }
                         
                         return 'No Series Rules to follow';
                     }
                     const seriesSelected = await laserSeriesSelection();
+                    console.log('laser selection done')
                     // const kbbPrice = document.querySelector("td#kbb_misc_fpp_adj").textContent*1;
                     const jdPriceValue = document.querySelector("td#nada_retail_rtl_adj").textContent*1;
                     if(/*isNaN(kbbPrice) || */isNaN(jdPriceValue)){
