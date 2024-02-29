@@ -1789,7 +1789,7 @@ const contentSetup = async (position=null) => {
                             
                         if(seriesOptions.length>1){
                             const result =`Manually selected series using first option. Selected Series ${seriesOptions[1].textContent}`;
-                            if(!seriesOptions[0].selected){
+                            if(seriesOptions[0].selected){
                                 seriesOptions[1].selected = true;
                                 await changeAndWaitForUpdate();
                             }
