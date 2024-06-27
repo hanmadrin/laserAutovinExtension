@@ -1805,13 +1805,13 @@ const contentSetup = async (position=null) => {
                     if(isNaN(kbbPrice) && isNaN(jdPriceValue)){
                         // throw new Error('Could not get values');
                         return {
-                            'updates': `-Manual- Couldn't get values\n${seriesSelected}`,
+                            'updates': `-Manual- Couldn't get values NAN \n${seriesSelected}`,
                             'status': 'Manual',
                         };
                     }else if(kbbPrice==0 && jdPriceValue==0){
                         // throw new Error('Could not get values');
                         return {
-                            'updates': `-Manual- Couldn't get values\n${seriesSelected}`,
+                            'updates': `-Manual- Couldn't get values value 0\n${seriesSelected}`,
                             'status': 'Manual',
                         };
                     }else{
