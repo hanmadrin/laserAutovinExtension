@@ -1712,9 +1712,9 @@ const contentSetup = async (position=null) => {
                 //         }
                 //     }
                 // }
-                const kbb = document.querySelector("td#kbb_misc_fpp_adj");
+                const kbb = document.querySelector("td#kbb_trade_xclt_adj");
                 const jd = document.querySelector("td#nada_retail_rtl_adj");
-                if(kbb!=null && jd!=null){
+                if(kbb!=null || jd!=null){
                     const laserSeriesSelection = async () => {
                         const seriesInput = document.querySelector("#trim_select");
                         if(!seriesInput) return 'series provided';
@@ -1894,7 +1894,7 @@ const contentSetup = async (position=null) => {
                 }else{
                     // throw new Error('Could not get values');
                     return {
-                        'updates': `-Manual- Couldn't get values`,
+                        'updates': `-Manual- Couldn't get values ALL NULL`,
                         'status': 'Manual',
                     };
                 }
