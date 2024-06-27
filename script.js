@@ -1825,7 +1825,7 @@ const contentSetup = async (position=null) => {
                         extraText.push(`\n\t\tReconditioning Cost: $${reconditioningCost}`);
                         const profit = 2000;
                         extraText.push(`\n\t\tProfit: $${profit}`);
-                        const mimimumDifference = 1500;
+                        const mimimumDifference = 2000;
                         const minimumPrice = Math.min(jdPriceValue,kbbPrice);
                         const nearest500Value = Math.floor(minimumPrice/500)*500;
                         extraText.push(`\n\t\t Nearest 500 Value: $${nearest500Value}`);
