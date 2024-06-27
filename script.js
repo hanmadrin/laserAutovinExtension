@@ -1800,8 +1800,8 @@ const contentSetup = async (position=null) => {
                     }
                     const seriesSelected = await laserSeriesSelection();
                     console.log('laser selection done')
-                    const kbbPrice = document.querySelector("td#kbb_trade_xclt_adj")?.textContent*1;
-                    const jdPriceValue = document.querySelector("td#nada_retail_rtl_adj")?.textContent*1;
+                    const kbbPrice = document.querySelector("td#kbb_trade_xclt_adj")?.textContent*1 || 0;
+                    const jdPriceValue = document.querySelector("td#nada_retail_rtl_adj")?.textContent*1 || 0;
                     if(isNaN(kbbPrice) && isNaN(jdPriceValue)){
                         // throw new Error('Could not get values');
                         return {
@@ -1816,6 +1816,21 @@ const contentSetup = async (position=null) => {
                         };
                     }else{
                         let fromKbb = false;
+                        if(kbbPrice==0 || jdPriceValue==0){
+                            extraText.push(`\n\t\tKBB Price: $${kbbPrice}`);
+                            extraText.push(`\n\t\tJD Price: $${jdPriceValue}`);
+                            if(kbbPrice==0){
+                                kbbPrice = jdPriceValue;
+                            }else{
+                                jdPriceValue = kbbPrice;
+                            }
+                            
+                            return {
+                                'updates': `-Manual- KBB or JD Price is zero${extraText.join('')}`,
+                                'status': 'Manual',
+                            };
+
+                        }
                         extraText = [];
                         extraText.push(`\n\tAppraisal Calculation:`);
                         extraText.push(`\n\t\tJD POWER Value($${jdPriceValue})`);
@@ -1826,6 +1841,7 @@ const contentSetup = async (position=null) => {
                         const profit = 2000;
                         extraText.push(`\n\t\tProfit: $${profit}`);
                         const mimimumDifference = 2000;
+                        
                         const minimumPrice = Math.min(jdPriceValue,kbbPrice);
                         const nearest500Value = Math.floor(minimumPrice/500)*500;
                         extraText.push(`\n\t\t Nearest 500 Value: $${nearest500Value}`);
