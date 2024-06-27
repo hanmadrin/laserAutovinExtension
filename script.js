@@ -1800,15 +1800,15 @@ const contentSetup = async (position=null) => {
                     }
                     const seriesSelected = await laserSeriesSelection();
                     console.log('laser selection done')
-                    const kbbPrice = document.querySelector("td#kbb_trade_xclt_adj")?.textContent*1 || 0;
+                    const kbbPriceValue = document.querySelector("td#kbb_trade_xclt_adj")?.textContent*1 || 0;
                     const jdPriceValue = document.querySelector("td#nada_retail_rtl_adj")?.textContent*1 || 0;
-                    if(isNaN(kbbPrice) && isNaN(jdPriceValue)){
+                    if(isNaN(kbbPriceValue) && isNaN(jdPriceValue)){
                         // throw new Error('Could not get values');
                         return {
                             'updates': `-Manual- Couldn't get values NAN \n${seriesSelected}`,
                             'status': 'Manual',
                         };
-                    }else if(kbbPrice==0 && jdPriceValue==0){
+                    }else if(kbbPriceValue==0 && jdPriceValue==0){
                         // throw new Error('Could not get values');
                         return {
                             'updates': `-Manual- Couldn't get values value 0\n${seriesSelected}`,
@@ -1816,15 +1816,15 @@ const contentSetup = async (position=null) => {
                         };
                     }else{
                         let fromKbb = false;
-                        if(kbbPrice==0 || jdPriceValue==0){
-                            extraText.push(`\n\t\tKBB Price: $${kbbPrice}`);
+                        if(kbbPriceValue==0 || jdPriceValue==0){
+                            extraText.push(`\n\t\tKBB Price: $${kbbPriceValue}`);
                             extraText.push(`\n\t\tJD Price: $${jdPriceValue}`);
-                            if(kbbPrice==0){
-                                kbbPrice = jdPriceValue;
+                            if(kbbPriceValue==0){
+                                kbbPriceValue = jdPriceValue;
                             }else{
-                                jdPriceValue = kbbPrice;
+                                jdPriceValue = kbbPriceValue;
                             }
-                            
+
                             return {
                                 'updates': `-Manual- KBB or JD Price is zero${extraText.join('')}`,
                                 'status': 'Manual',
@@ -1834,6 +1834,7 @@ const contentSetup = async (position=null) => {
                         extraText = [];
                         extraText.push(`\n\tAppraisal Calculation:`);
                         extraText.push(`\n\t\tJD POWER Value($${jdPriceValue})`);
+                        extraText.push(`\n\t\tKBB Value($${kbbPriceValue})`);
                         const certificationCost = calculateCertificationCost(state);
                         extraText.push(`\n\t\tCertification Cost: $${certificationCost}`);
                         const reconditioningCost = 400;
@@ -1842,7 +1843,7 @@ const contentSetup = async (position=null) => {
                         extraText.push(`\n\t\tProfit: $${profit}`);
                         const mimimumDifference = 2000;
                         
-                        const minimumPrice = Math.min(jdPriceValue,kbbPrice);
+                        const minimumPrice = Math.min(jdPriceValue,kbbPriceValue);
                         const nearest500Value = Math.floor(minimumPrice/500)*500;
                         extraText.push(`\n\t\t Nearest 500 Value: $${nearest500Value}`);
                         const askingPrice = nearest500Value-1;
