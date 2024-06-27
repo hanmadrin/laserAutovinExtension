@@ -1800,8 +1800,8 @@ const contentSetup = async (position=null) => {
                     }
                     const seriesSelected = await laserSeriesSelection();
                     console.log('laser selection done')
-                    const kbbPrice = document.querySelector("td#kbb_trade_xclt_adj").textContent*1;
-                    const jdPriceValue = document.querySelector("td#nada_retail_rtl_adj").textContent*1;
+                    const kbbPrice = document.querySelector("td#kbb_trade_xclt_adj")?.textContent*1;
+                    const jdPriceValue = document.querySelector("td#nada_retail_rtl_adj")?.textContent*1;
                     if(isNaN(kbbPrice) && isNaN(jdPriceValue)){
                         // throw new Error('Could not get values');
                         return {
