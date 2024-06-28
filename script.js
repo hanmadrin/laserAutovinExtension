@@ -1815,22 +1815,8 @@ const contentSetup = async (position=null) => {
                             'status': 'Manual',
                         };
                     }else{
+                        // either of them can be zero
                         let fromKbb = false;
-                        if(kbbPriceValue==0 || jdPriceValue==0){
-                            extraText.push(`\n\t\tKBB Price: $${kbbPriceValue}`);
-                            extraText.push(`\n\t\tJD Price: $${jdPriceValue}`);
-                            if(kbbPriceValue==0){
-                                kbbPriceValue = jdPriceValue;
-                            }else{
-                                jdPriceValue = kbbPriceValue;
-                            }
-
-                            return {
-                                'updates': `-Manual- KBB or JD Price is zero${extraText.join('')}`,
-                                'status': 'Manual',
-                            };
-
-                        }
                         extraText = [];
                         extraText.push(`\n\tAppraisal Calculation:`);
                         extraText.push(`\n\t\tJD POWER Value($${jdPriceValue})`);
@@ -1843,42 +1829,51 @@ const contentSetup = async (position=null) => {
                         extraText.push(`\n\t\tProfit: $${profit}`);
                         const mimimumDifference = 2000;
                         
-                        const minimumPrice = Math.min(jdPriceValue,kbbPriceValue);
-                        const nearest500Value = Math.floor(minimumPrice/500)*500;
-                        extraText.push(`\n\t\t Nearest 500 Value: $${nearest500Value}`);
-                        const askingPrice = nearest500Value-1;
-                        extraText.push(`\n\t\tAfter Subtracting 1: $${askingPrice}`);
-
-                        const appraisedValue = askingPrice-certificationCost-reconditioningCost-profit;
-                        extraText.push(`\n\t\tPre Appraised Value: $${appraisedValue}`);
-                        const nearest500AppraisedValue = Math.floor(appraisedValue/500)*500;
-                        extraText.push(`\n\t\tNearest 500 Appraised Value: $${nearest500AppraisedValue}`);
-                        let mmcOffer = nearest500AppraisedValue;
-                        if(sellerPrice-nearest500AppraisedValue < mimimumDifference){
-                            mmcOffer = Math.floor((sellerPrice-mimimumDifference)/500)*500;
-                            extraText.push(`\n\t\tAfter applying minimum price difference $${mimimumDifference} offer will be $${mmcOffer} as seller asking $${sellerPrice} is less than minimum difference`);
+                        let mmcOffer = 0;
+                        if(jdPriceValue!=0){
+                            const minimumPrice = Math.min(jdPriceValue);
+                            const nearest500Value = Math.floor(minimumPrice/500)*500;
+                            extraText.push(`\n\t\t Nearest 500 Value: $${nearest500Value}`);
+                            const askingPrice = nearest500Value-1;
+                            extraText.push(`\n\t\tAfter Subtracting 1: $${askingPrice}`);
+    
+                            const appraisedValue = askingPrice-certificationCost-reconditioningCost-profit;
+                            extraText.push(`\n\t\tPre Appraised Value: $${appraisedValue}`);
+                            const nearest500AppraisedValue = Math.floor(appraisedValue/500)*500;
+                            extraText.push(`\n\t\tNearest 500 Appraised Value: $${nearest500AppraisedValue}`);
+                            mmcOffer = nearest500AppraisedValue;
+                            if(sellerPrice-nearest500AppraisedValue < mimimumDifference){
+                                mmcOffer = Math.floor((sellerPrice-mimimumDifference)/500)*500;
+                                extraText.push(`\n\t\tAfter applying minimum price difference $${mimimumDifference} offer will be $${mmcOffer} as seller asking $${sellerPrice} is less than minimum difference`);
+                            }
                         }
+                        
+                        
 
+                        if(kbbPriceValue!=0){
+                            const kbbTradeVeryGood = kbbPriceValue;
+                            const nearest500KbbTradeVeryGood = Math.floor(kbbTradeVeryGood/500)*500;
+                            // if(!(nearest500KbbTradeVeryGood==0 || isNaN(nearest500KbbTradeVeryGood)) ){
+                            extraText.push(`\n\t\tKBB Trade Excellent price ($${kbbTradeVeryGood})`);  
+                            extraText.push(`\n\t\tNearest 500 Value of KBB Trade Excellent price: $${nearest500KbbTradeVeryGood}`);
+                            if(mmcOffer > nearest500KbbTradeVeryGood){
+                                extraText.push(`\n\t\tCurrent MMC Offer is more than KBB Trade Excellent price. So offer is $${nearest500KbbTradeVeryGood}`);
+                                fromKbb = true;
+                            }else{
+                                extraText.push(`\n\t\tCurrent MMC Offer is less than KBB Trade Excellent price. So offer is $${mmcOffer}`);
+                            }
+                            mmcOffer = Math.min(mmcOffer,nearest500KbbTradeVeryGood);
+                            // }
+                            if(fromKbb){
+                                extraText.push(`\n\t\tNearest 500 Value: ${nearest500KbbTradeVeryGood}`);  
+                                extraText.push(`\n\t\tAppraising using KBB Trade Excellent price`); 
+                                // remove rest of the lines\
+                                // extraText = extraText.slice(0,3);
+                            }
+                        }
+                        
 
-                        // const kbbTradeVeryGood = document.querySelector("td#kbb_trade_xclt_adj")?.textContent*1;
-                        // const nearest500KbbTradeVeryGood = Math.floor(kbbTradeVeryGood/500)*500;
-                        // if(!(nearest500KbbTradeVeryGood==0 || isNaN(nearest500KbbTradeVeryGood)) ){
-                        //     extraText.push(`\n\t\tKBB Trade Excellent price ($${kbbTradeVeryGood})`);  
-                        //     extraText.push(`\n\t\tNearest 500 Value of KBB Trade Excellent price: $${nearest500KbbTradeVeryGood}`);
-                        //     if(mmcOffer > nearest500KbbTradeVeryGood){
-                        //         extraText.push(`\n\t\tCurrent MMC Offer is more than KBB Trade Excellent price. So offer is $${nearest500KbbTradeVeryGood}`);
-                        //         fromKbb = true;
-                        //     }else{
-                        //         extraText.push(`\n\t\tCurrent MMC Offer is less than KBB Trade Excellent price. So offer is $${mmcOffer}`);
-                        //     }
-                        //     mmcOffer = Math.min(mmcOffer,nearest500KbbTradeVeryGood);
-                        // }
-
-                        // if(fromKbb){
-                        //     extraText.push(`\n\t\tNearest 500 Value: ${nearest500KbbTradeVeryGood}`);  
-                        //     // remove rest of the lines\
-                        //     extraText = extraText.slice(0,3);
-                        // }
+                        
                         if(mmcOffer<=0){
                             return {
                                 'updates': `-Manual- Program says mmc offer is zero or less${extraText.join('')}`,
