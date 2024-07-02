@@ -1822,8 +1822,8 @@ const contentSetup = async (position=null) => {
                         extraText = [];
                         extraText.push(`\n\tAppraisal Calculation:`);
                         extraText.push(`\n\t\tJD POWER Value($${jdPriceValue})`);
-                        extraText.push(`\n\t\tKBB Value($${kbbPriceValue})`);
-                        extraText.push(`\n\t\tKBB Retail Value($${kbbRetailValue})`);
+                        extraText.push(`\n\t\tKBB Trade Excellent Value($${kbbPriceValue})`);
+                        extraText.push(`\n\t\tKBB Retail Adjusted Value($${kbbRetailValue})`);
                         const certificationCost = calculateCertificationCost(state);
                         extraText.push(`\n\t\tCertification Cost: $${certificationCost}`);
                         const reconditioningCost = 400;
