@@ -1714,7 +1714,8 @@ const contentSetup = async (position=null) => {
                 // }
                 const kbb = document.querySelector("td#kbb_trade_xclt_adj");
                 const jd = document.querySelector("td#nada_retail_rtl_adj");
-                if(kbb!=null || jd!=null){
+                const kbbRetail = document.querySelector("td#kbb_misc_retail_adj");
+                if(kbb!=null || jd!=null || kbbRetail!=null){
                     const laserSeriesSelection = async () => {
                         const seriesInput = document.querySelector("#trim_select");
                         if(!seriesInput) return 'series provided';
@@ -1802,13 +1803,14 @@ const contentSetup = async (position=null) => {
                     console.log('laser selection done')
                     const kbbPriceValue = document.querySelector("td#kbb_trade_xclt_adj")?.textContent*1 || 0;
                     const jdPriceValue = document.querySelector("td#nada_retail_rtl_adj")?.textContent*1 || 0;
-                    if(isNaN(kbbPriceValue) && isNaN(jdPriceValue)){
+                    const kbbRetailValue = document.querySelector("td#kbb_misc_retail_adj")?.textContent*1 || 0;
+                    if(isNaN(kbbPriceValue) && isNaN(jdPriceValue) && isNaN(kbbRetailValue)){
                         // throw new Error('Could not get values');
                         return {
                             'updates': `-Manual- Couldn't get values NAN \n${seriesSelected}`,
                             'status': 'Manual',
                         };
-                    }else if(kbbPriceValue==0 && jdPriceValue==0){
+                    }else if(kbbPriceValue==0 && jdPriceValue==0 && kbbRetailValue==0){
                         // throw new Error('Could not get values');
                         return {
                             'updates': `-Manual- Couldn't get values value 0\n${seriesSelected}`,
@@ -1821,6 +1823,7 @@ const contentSetup = async (position=null) => {
                         extraText.push(`\n\tAppraisal Calculation:`);
                         extraText.push(`\n\t\tJD POWER Value($${jdPriceValue})`);
                         extraText.push(`\n\t\tKBB Value($${kbbPriceValue})`);
+                        extraText.push(`\n\t\tKBB Retail Value($${kbbRetailValue})`);
                         const certificationCost = calculateCertificationCost(state);
                         extraText.push(`\n\t\tCertification Cost: $${certificationCost}`);
                         const reconditioningCost = 400;
@@ -1830,8 +1833,14 @@ const contentSetup = async (position=null) => {
                         const mimimumDifference = 2000;
                         
                         let mmcOffer = 0;
-                        if(jdPriceValue!=0){
-                            const minimumPrice = Math.min(jdPriceValue);
+                        if(jdPriceValue!=0 || kbbRetailValue!=0){
+                            if(jdPriceValue==0){
+                                kbbPriceValue = kbbRetailValue;
+                            }
+                            if(kbbRetailValue==0){
+                                kbbRetailValue = jdPriceValue;
+                            }
+                            const minimumPrice = Math.min(jdPriceValue,kbbRetailValue);
                             const nearest500Value = Math.floor(minimumPrice/500)*500;
                             extraText.push(`\n\t\t Nearest 500 Value: $${nearest500Value}`);
                             const askingPrice = nearest500Value-1;
