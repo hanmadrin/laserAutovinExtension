@@ -1801,9 +1801,9 @@ const contentSetup = async (position=null) => {
                     }
                     const seriesSelected = await laserSeriesSelection();
                     console.log('laser selection done')
-                    const kbbPriceValue = document.querySelector("td#kbb_trade_xclt_adj")?.textContent*1 || 0;
-                    const jdPriceValue = document.querySelector("td#nada_retail_rtl_adj")?.textContent*1 || 0;
-                    const kbbRetailValue = document.querySelector("td#kbb_misc_retail_adj")?.textContent*1 || 0;
+                    let kbbPriceValue = document.querySelector("td#kbb_trade_xclt_adj")?.textContent*1 || 0;
+                    let jdPriceValue = document.querySelector("td#nada_retail_rtl_adj")?.textContent*1 || 0;
+                    let kbbRetailValue = document.querySelector("td#kbb_misc_retail_adj")?.textContent*1 || 0;
                     if(isNaN(kbbPriceValue) && isNaN(jdPriceValue) && isNaN(kbbRetailValue)){
                         // throw new Error('Could not get values');
                         return {
