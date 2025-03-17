@@ -1,0 +1,77 @@
+First of all, Program checks all the values from monday has for an item.
+-> Vin
+-> Mileage
+-> State
+-> Price$
+-> Vehicle title
+-> Series
+-> URL
+
+
+**If vin is not 17 character, program will write an Upadte saying "Vin is not correct" and will set the status to "Invalid Vin"
+
+**If either of mileage/state/price is empty or 0, program will write an Update saying "VIN / Mileage / State / Price / vehicle is(are) empty" and will set the status to "Empty Value"
+
+
+If the item satisfied above rules, program will start appraising the item.
+
+1. Program will take below values from laser screen
+    -> ***KBB Trade Excellent Value***
+    -> ***JD power Retail Value***
+    -> ***KBB Misc Retails value***
+2. If all of the baove values are 0 or null, Program will create an update saying "-Manual- Couldn't get values value 0/NAN" and will set the status to "Manual"
+
+3.First program will apraise only using ***JD power Retail Value*** and  ***KBB Misc Retails value***. First progran will take the lowest of the two values. Let's say "***Min of JD retail and KBB retail value***"
+
+5. Then, program will take nearest 500 value of ***Min of JD retail and KBB retail value***.
+
+6. Certification cost will be deducted . Near state has $800 certification cost and far states has $1100 certification costs.
+    near:[
+        'Pennsylvania',
+        'Maryland',
+        'Delaware',
+        'New Jersey',
+        'New York',
+        'Ohio'
+    ],
+    far:[
+        'Maine',
+        'Vermont',
+        'New Hampshire',
+        'Massachusetts',
+        'Rhode Island',
+        'Connecticut',
+        'West Virginia',
+        'Virginia',
+        'North Carolina',
+        'South Carolina',
+        'Georgia',
+        'Florida',
+        'Alabama',
+        'Mississippi',
+        'Tennessee',
+        'Kentucky',
+        'Indiana',
+        'Michigan',
+        'Illinois',
+        'Wisconsin',
+        'Minnesota',
+        'Iowa',
+        'Missouri',
+        'Texas',
+        'Arkansas',
+        'Oklahoma',
+        'Kansas',
+        'North Dakota',
+    ]
+
+5. After that, Recondition cost of $2000 wil be deducted
+6. Then, $2000 profit will be deducted
+7. Now, if the calculated value and seller asking price has a difference lower than $2000, calculated value will replaced by sellerPrice-$2000
+8. Now, If nearest 500 value of ***KBB Trade Excellent Value*** is less than the calculated value, calculated value will be replaced by nearest 500 value of ***KBB Trade Excellent Value***.
+
+Now, we can call this calculated value as "MMC Offer"
+
+Finalization:
+1. If difference between mmcOffer and seller Asking price is more than 5000, Program will create a status saying "-PASS $- Seller asking 5k+" and will set status to "PASS$". Else, Program will create a update saying "-OFFER-" and will set the status to "Initital Offer"
+

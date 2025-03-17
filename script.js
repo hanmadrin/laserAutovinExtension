@@ -1309,6 +1309,14 @@ const calculateMondayItemRawVin = async () => {
 
 const fixedData = {
     metaInformation:{
+        fireMode:{
+            title: 'Fire Mode',
+            type: 'checkbox',
+            defaultValue: false,
+            point: 'checked',
+            interactive: true,
+            requiredToStart: false,
+        },
         deviceId:{
             title: 'Device Id',
             type: 'text',
@@ -1398,7 +1406,7 @@ const showDataOnConsole= (data)=>{
     console.log(data);
 }
 
-const serverResponse = async ({directory,item_ids=[],data={}}) => {
+const serverResponse = async ({directory,item_ids=[],data={},fireMode=null}) => {
     const metaInformationDB = new ChromeStorage('metaInformation');
     const metaInformation = await metaInformationDB.GET();
     const deviceId = metaInformation.deviceId;
@@ -1415,6 +1423,7 @@ const serverResponse = async ({directory,item_ids=[],data={}}) => {
                 device_id: deviceId,
                 item_ids: item_ids,
                 data: data,
+                fireMode: fireMode
             }),
         }
     );
@@ -1586,7 +1595,9 @@ const contentSetup = async (position=null) => {
             consoleBoard = document.getElementById(fixedData.workingSelectors.content.console);
             if(!mondayItemExits){
                 console.log('no item in local db');
-                let newItem = await serverResponse({directory:'getNewItemId'});
+                const metaInformationDB = new ChromeStorage('metaInformation');
+                const isFireMode = (await metaInformationDB.GET()).fireMode;
+                let newItem = await serverResponse({directory:'getNewItemId',fireMode:isFireMode});
                 console.log(newItem.action);
                 if(newItem.action=='setDeviceId'){
                     showDataOnConsole('setDeviceId');
@@ -1724,8 +1735,12 @@ const contentSetup = async (position=null) => {
                         const changeAndWaitForUpdate = async()=>{
                             seriesInput.dispatchEvent(new Event('change'));
                             while(!(document.querySelector("#trim_select").value==document.querySelector("#kbb_select_trim")?.value  || document.querySelector("#trim_select").value==document.querySelector("#nada_select_trim")?.value)){
+
+                                if(document.querySelector("#kbb_select_trim")==null && document.querySelector("#nada_select_trim")==null){
+                                    break;
+                                }
                                 await sleep(5000);
-                                console.log('inside loop')
+                                console.log('inside loops')
                             }
                         }
                         // if(seriesInput.value=='' || seriesInput.value==null){
@@ -1799,8 +1814,12 @@ const contentSetup = async (position=null) => {
                         
                         return 'No Series Rules to follow';
                     }
-                    const seriesSelected = await laserSeriesSelection();
-                    console.log('laser selection done')
+                    let seriesSelected = '';
+                    if(vehicle){
+
+                        seriesSelected = await laserSeriesSelection();
+                        console.log('laser selection done')
+                    }
                     let kbbPriceValue = document.querySelector("td#kbb_trade_xclt_adj")?.textContent*1 || 0;
                     let jdPriceValue = document.querySelector("td#nada_retail_rtl_adj")?.textContent*1 || 0;
                     let kbbRetailValue = document.querySelector("td#kbb_misc_retail_adj")?.textContent*1 || 0;
@@ -1947,6 +1966,8 @@ const contentSetup = async (position=null) => {
                         console.log('program should have logged in by now');
                         return false;
                     }
+                    // console.log(mondayItem);
+                    // throw new Error('Something went wrong');
                     mondayItem.local.result = await appraisalResult(mondayItem.local.item);
                     if(mondayItem.server.delete){
                         // https://mvs.laserappraiserservices.com/mvs/vehicleList?pageAction=vinDelete&vin=JTDKARFP3L3127584&deviceId=40F5AD23-510E-451F-A162-D56BC8B2D175
@@ -2032,7 +2053,7 @@ const contentSetup = async (position=null) => {
                 await serverResponse({directory:'autovinAction',data:{
                     action: mondayItem.local.deleted?'deleted':'saved',
                     item_id: mondayItem.monday.id,
-                    account_id: mondayItem.server.data.id
+                    account_id: mondayItem.server.data.id,
                 }});
                 await mondayItemDB.SET(null);
                 console.log('sleeping for 60 seconds');
