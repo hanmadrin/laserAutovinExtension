@@ -1849,7 +1849,7 @@ const contentSetup = async (position=null) => {
                         extraText.push(`\n\t\tReconditioning Cost: $${reconditioningCost}`);
                         const profit = 2000;
                         extraText.push(`\n\t\tProfit: $${profit}`);
-                        const mimimumDifference = 2000;
+                        const mimimumDifference = 1500;
                         
                         let mmcOffer = 0;
                         if(jdPriceValue!=0 || kbbRetailValue!=0){
@@ -1900,14 +1900,14 @@ const contentSetup = async (position=null) => {
                             }
                         }
                         
-
+                        const maximumPriceDifferenece = 5500;
                         
                         if(mmcOffer<=0){
                             return {
                                 'updates': `-Manual- Program says mmc offer is zero or less${extraText.join('')}`,
                                 'status': 'Manual',
                             };
-                        }else if(sellerPrice-mmcOffer > 5000){
+                        }else if(sellerPrice-mmcOffer > maximumPriceDifferenece){
                             return {
                                 'updates': `${getEstDate()}-PASS $- Seller asking 5k+ (${sellerPrice})-AUTO\nPossible Offer will be ${mmcOffer}-${mmcOffer+500}\n${url}\n${seriesSelected}${extraText.join('')}`,
                                 'MMC Offer$': `${mmcOffer}`,
