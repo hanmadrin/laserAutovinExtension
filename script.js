@@ -1996,7 +1996,7 @@ const contentSetup = async (position=null) => {
                             const maximumCalculation = 10;
                             mmcOffer = kbbPriceValue;
                             extraText.push(`\n\t\tkbb excellent price $${kbbPriceValue} + cost $${totalCost} = : $${kbbPriceValue+totalCost}`)
-                            if(retailValue<kbbPriceValue+totalCost){
+                            if(retailValue>kbbPriceValue+totalCost){
                                 isLower = true
                                 extraText.push(`\n\t\t retail value $${retailValue}< kbb excellent $${kbbPriceValue}+ totalcost $${totalCost} ($${kbbPriceValue+totalCost})`)
                                 
