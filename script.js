@@ -66,12 +66,12 @@ const calculateCertificationCost = (state)=>{
     nearState = states.near.includes(state);
     farState = states.far.includes(state);
     if(nearState){
-        return '800';
+        return 800;
     }
     if(farState){
-        return '1100';
+        return 1100;
     }
-    return '800';
+    return 800;
 }
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const carfaxResults = async(vin,sellerPrice)=>{
