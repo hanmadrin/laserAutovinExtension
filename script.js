@@ -1841,7 +1841,8 @@ const contentSetup = async (position=null) => {
                         extraText = [];
                         extraText.push(`\n\tAppraisal Calculation:`);
                         extraText.push(`\n\t\tJD POWER Value($${jdPriceValue})`);
-                        extraText.push(`\n\t\tKBB Trade Excellent Value($${kbbPriceValue})`);
+                        extraText.push(`\n\t\tKBB Trade Excellent Value($${kbbPriceValue}+$500= $${kbbPriceValue+500})`);
+                        kbbPriceValue = kbbPriceValue + 500;
                         extraText.push(`\n\t\tKBB Retail Adjusted Value($${kbbRetailValue})`);
                         const certificationCost = calculateCertificationCost(state);
                         extraText.push(`\n\t\tCertification Cost: $${certificationCost}`);
@@ -1900,7 +1901,7 @@ const contentSetup = async (position=null) => {
                             }
                         }
                         
-                        const maximumPriceDifferenece = 5500;
+                        const maximumPriceDifferenece = 5000;
                         
                         if(mmcOffer<=0){
                             return {
@@ -1909,7 +1910,7 @@ const contentSetup = async (position=null) => {
                             };
                         }else if(sellerPrice-mmcOffer > maximumPriceDifferenece){
                             return {
-                                'updates': `${getEstDate()}-PASS $- Seller asking 5.5k+ (${sellerPrice})-AUTO\nPossible Offer will be ${mmcOffer}-${mmcOffer+500}\n${url}\n${seriesSelected}${extraText.join('')}`,
+                                'updates': `${getEstDate()}-PASS $- Seller asking 5k+ (${sellerPrice})-AUTO\nPossible Offer will be ${mmcOffer}-${mmcOffer+500}\n${url}\n${seriesSelected}${extraText.join('')}`,
                                 'MMC Offer$': `${mmcOffer}`,
                                 // 'KBB Fair$' : `${kbbFairPrice}`,
                                 // 'KBB TIV' : `${kbbTradeValue}`,
