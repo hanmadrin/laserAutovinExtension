@@ -1973,6 +1973,7 @@ const contentSetup = async (position=null) => {
                             }
                         }
                         let mmcOffer = 0;
+                        const maximumPriceDifferenece = 5000;
                         const retailValue = Math.min(jdPriceValue,kbbRetailValue)
                         extraText.push(`\n\t\tRetail Value will be: $${retailValue}`);
                         const certificationCost = calculateCertificationCost(state);
