@@ -1885,13 +1885,17 @@ const contentSetup = async (position=null) => {
                             // if(!(nearest500KbbTradeVeryGood==0 || isNaN(nearest500KbbTradeVeryGood)) ){
                             extraText.push(`\n\t\tKBB Trade Excellent price ($${kbbTradeVeryGood})`);  
                             extraText.push(`\n\t\tNearest 500 Value of KBB Trade Excellent price: $${nearest500KbbTradeVeryGood}`);
-                            if(mmcOffer > nearest500KbbTradeVeryGood){
+                            if(mmcOffer > nearest500KbbTradeVeryGood && nearest500KbbTradeVeryGood+calculateCertificationCost(state)+reconditioningCost < sellerPrice){
                                 extraText.push(`\n\t\tCurrent MMC Offer is more than KBB Trade Excellent price. So offer is $${nearest500KbbTradeVeryGood}`);
                                 fromKbb = true;
+                                if(nearest500KbbTradeVeryGood+calculateCertificationCost(state)+reconditioningCost < sellerPrice){
+                                    mmcOffer = nearest500KbbTradeVeryGood;
+                                }else{
+                                    mmcOffer = Math.min(mmcOffer,nearest500KbbTradeVeryGood);
+                                }
                             }else{
                                 extraText.push(`\n\t\tCurrent MMC Offer is less than KBB Trade Excellent price. So offer is $${mmcOffer}`);
                             }
-                            mmcOffer = Math.min(mmcOffer,nearest500KbbTradeVeryGood);
                             // }
                             if(fromKbb){
                                 extraText.push(`\n\t\tNearest 500 Value: ${nearest500KbbTradeVeryGood}`);  
