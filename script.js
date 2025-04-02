@@ -1986,7 +1986,7 @@ const contentSetup = async (position=null) => {
                         extraText.push(`\n\t\tMinimum Differece: $${mimimumDifference}`);
                         extraText.push(`\n\n\n\t\t:::MMC OFFER CALCULATION:::`)
                         const totalCost = certificationCost + reconditioningCost + profit;
-                        extraText.push(`\n\t\t${totalCost} = $${certificationCost} + $${reconditioningCost} + $${profit}`)
+                        extraText.push(`\n\t\ttotalcost $${totalCost} = $${certificationCost} + $${reconditioningCost} + $${profit}`)
                         if(kbbPriceValue*1==0){
                             mmcOffer = retailValue - totalCost;
                             extraText.push(`\n\t\tAs kbb excellent price is 0, will get below cost $${totalCost} of retail value $${retailValue} = mmcoffer: $${mmcOffer}`);
@@ -2015,7 +2015,7 @@ const contentSetup = async (position=null) => {
                         if(mmcOffer+mimimumDifference > sellerPrice){
                             extraText.push(`\n\t\t mmcOffer $${mmcOffer} should have a differene of $${mimimumDifference} from asking price $${sellerPrice}`)
                             mmcOffer = sellerPrice - mimimumDifference;
-                            extraText.push(`\n\t\t mmcOffer should be: $${mmcOffer} (seler price ${sellerPrice} - minimm difference ${mimimumDifference})`)
+                            extraText.push(`\n\t\t mmcOffer should be: $${mmcOffer} (seler price $${sellerPrice} - minimm difference $${mimimumDifference})`)
                         }
                         if(mmcOffer<=0){
                             return {
@@ -2024,7 +2024,7 @@ const contentSetup = async (position=null) => {
                             };
                         }else if(sellerPrice-mmcOffer > maximumPriceDifferenece){
                             return {
-                                'updates': `${getEstDate()}-PASS $- Seller asking 5k+ (${sellerPrice})-AUTO\nPossible Offer will be ${mmcOffer}-${mmcOffer+500}\n${url}\n${seriesSelected}${extraText.join('')}`,
+                                'updates': `${getEstDate()}-PASS $- Seller asking 5k+ ($${sellerPrice})-AUTO\nPossible Offer will be $${mmcOffer} - $${mmcOffer+500}\n${url}\n${seriesSelected}${extraText.join('')}`,
                                 'MMC Offer$': `${mmcOffer}`,
                                 // 'KBB Fair$' : `${kbbFairPrice}`,
                                 // 'KBB TIV' : `${kbbTradeValue}`,
