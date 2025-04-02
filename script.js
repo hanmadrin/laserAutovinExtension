@@ -1998,7 +1998,7 @@ const contentSetup = async (position=null) => {
                             extraText.push(`\n\t\tkbb excellent price $${kbbPriceValue} + cost $${totalCost} = : $${kbbPriceValue+totalCost}`)
                             if(retailValue>kbbPriceValue+totalCost){
                                 isLower = true
-                                extraText.push(`\n\t\t retail value $${retailValue}< kbb excellent $${kbbPriceValue}+ totalcost $${totalCost} ($${kbbPriceValue+totalCost})`)
+                                extraText.push(`\n\t\t retail value $${retailValue}> kbb excellent $${kbbPriceValue}+ totalcost $${totalCost} ($${kbbPriceValue+totalCost})`)
                                 
                                 extraText.push(`\n\t\t Mmc Offer is $${mmcOffer}`)
                             }
@@ -2007,6 +2007,9 @@ const contentSetup = async (position=null) => {
                                 extraText.push(`\n\t\t retail value $${retailValue}> kbb excellent $${kbbPriceValue}+ totalcost $${totalCost} ($${kbbPriceValue+totalCost})`)
                                 extraText.push(`lowering the offer from $${mmcOffer} to $${mmcOffer-500} `);
                                 mmcOffer = mmcOffer-500;
+                                if(count>10){
+                                    throw new Error()
+                                }
                             }
                             extraText.push(`\n\t\tOffer should be: $${mmcOffer}`)
                             mmcOffer = Math.floor(mmcOffer/500)*500;
