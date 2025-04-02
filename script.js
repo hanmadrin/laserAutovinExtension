@@ -2004,9 +2004,15 @@ const contentSetup = async (position=null) => {
                             }
                             while(!isLower){
                                 count++;
-                                extraText.push(`\n\t\t retail value $${retailValue}> kbb excellent $${kbbPriceValue}+ totalcost $${totalCost} ($${kbbPriceValue+totalCost})`)
+                                extraText.push(`\n\t\t retail value $${retailValue}> new offer $${kbbPriceValue}+ totalcost $${totalCost} ($${kbbPriceValue+totalCost})`)
                                 extraText.push(`lowering the offer from $${mmcOffer} to $${mmcOffer-500} `);
                                 mmcOffer = mmcOffer-500;
+                                if(retailValue>mmcOffer+totalCost){
+                                    isLower = true
+                                    extraText.push(`\n\t\t retail value $${retailValue}> new offer $${kbbPriceValue}+ totalcost $${totalCost} ($${kbbPriceValue+totalCost})`)
+                                    
+                                    extraText.push(`\n\t\t Mmc Offer is $${mmcOffer}`)  
+                                }
                                 if(count>10){
                                     throw new Error()
                                 }
