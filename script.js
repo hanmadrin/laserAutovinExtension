@@ -1939,7 +1939,7 @@ const contentSetup = async (position=null) => {
                     const extraText = [];
                     extraText.push(`\n\tAppraisal Calculation:`);
                     extraText.push(`\n\t\tJD POWER Value($${jdPriceValue})`);
-                    extraText.push(`\n\t\tKBB Trade Excellent Value($${kbbPriceValue}+$500= $${kbbPriceValue+500})`);
+                    extraText.push(`\n\t\tKBB Trade Excellent TRADE($${kbbPriceValue}+$500= $${kbbPriceValue+500})`);
                     kbbPriceValue = kbbPriceValue + 500;
                     extraText.push(`\n\t\tKBB Retail Adjusted Value($${kbbRetailValue})`);
 
@@ -1989,16 +1989,16 @@ const contentSetup = async (position=null) => {
                         extraText.push(`\n\t\ttotalcost $${totalCost} = $${certificationCost} + $${reconditioningCost} + $${profit}`)
                         if(kbbPriceValue*1==0){
                             mmcOffer = retailValue - totalCost;
-                            extraText.push(`\n\t\tAs kbb excellent price is 0, will get below cost $${totalCost} of retail value $${retailValue} = mmcoffer: $${mmcOffer}`);
+                            extraText.push(`\n\t\tAs kbb excellent TRADE is 0, will get below cost $${totalCost} of retail value $${retailValue} = mmcoffer: $${mmcOffer}`);
                         }else{
                             let isLower = false;
                             let count = 0;
                             const maximumCalculation = 10;
                             mmcOffer = kbbPriceValue;
-                            extraText.push(`\n\t\tkbb excellent price $${kbbPriceValue} + cost $${totalCost} = : $${kbbPriceValue+totalCost}`)
+                            extraText.push(`\n\t\tkbb excellent TRADE $${kbbPriceValue} + cost $${totalCost} = : $${kbbPriceValue+totalCost}`)
                             if(retailValue>kbbPriceValue+totalCost){
                                 isLower = true
-                                extraText.push(`\n\t\t retail value $${retailValue}> kbb excellent $${kbbPriceValue}+ totalcost $${totalCost} ($${kbbPriceValue+totalCost})`)
+                                extraText.push(`\n\t\t retail value $${retailValue}> kbb excellent TRADE $${kbbPriceValue}+ totalcost $${totalCost} ($${kbbPriceValue+totalCost})`)
                                 
                                 extraText.push(`\n\t\t Mmc Offer is $${mmcOffer}`)
                             }
