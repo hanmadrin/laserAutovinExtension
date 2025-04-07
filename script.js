@@ -1993,7 +1993,7 @@ const contentSetup = async (position=null) => {
                         }else{
                             let isLower = false;
                             let count = 0;
-                            const maximumCalculation = 10;
+                            const maximumCalculation = 30;
                             mmcOffer = kbbPriceValue;
                             extraText.push(`\n\t\tkbb excellent TRADE $${kbbPriceValue} + cost $${totalCost} = : $${kbbPriceValue+totalCost}`)
                             if(retailValue>kbbPriceValue+totalCost){
@@ -2013,7 +2013,7 @@ const contentSetup = async (position=null) => {
                                     
                                     extraText.push(`\n\t\t Mmc Offer is $${mmcOffer}`)  
                                 }
-                                if(count>10){
+                                if(count>maximumCalculation){
                                     throw new Error()
                                 }
                             }
