@@ -2014,7 +2014,10 @@ const contentSetup = async (position=null) => {
                                     extraText.push(`\n\t\t Mmc Offer is $${mmcOffer}`)  
                                 }
                                 if(count>maximumCalculation){
-                                    throw new Error()
+                                    return {
+                                        'updates': `-Manual- Program couldn't appraise`,
+                                        'status': 'Manual',
+                                    };
                                 }
                             }
                             extraText.push(`\n\t\tOffer should be: $${mmcOffer}`)
