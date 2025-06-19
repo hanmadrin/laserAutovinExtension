@@ -16,12 +16,13 @@
     "content_scripts":[
         {
             "matches": [
-                "https://mvs.laserappraiserservices.com/mvs/vehicleList",
-                "https://mvs.laserappraiserservices.com/mvs/vehicleDetail/*",
-                "https://laserappraiser.com/*",
-                "https://mvs.laserappraiserservices.com/mvs/login/*",
-                "https://mvs.laserappraiserservices.com/*"
-
+                // "https://mvs.laserappraiserservices.com/mvs/vehicleList",
+                // "https://mvs.laserappraiserservices.com/mvs/vehicleDetail/*",
+                // "https://laserappraiser.com/*",
+                // "https://mvs.laserappraiserservices.com/mvs/login/*",
+                // "https://mvs.laserappraiserservices.com/*"
+                "https://dmsprd.laserappraiserservices.com/appraisals",
+                "https://dmsprd.laserappraiserservices.com/vehicle-detail?*"
             ],
             "css": ["style.css"],
             "js": ["script.js"],
