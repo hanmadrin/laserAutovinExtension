@@ -1943,6 +1943,12 @@ const contentSetup = async (position = null) => {
                     extraText.push(`\n\tAppraisal Calculation:`);
                     extraText.push(`\n\t\tJD POWER Value($${jdPriceValue})`);
                     extraText.push(`\n\t\tKBB Trade Excellent TRADE($${kbbPriceValue}+$500= $${kbbPriceValue + 500})`);
+                    if( kbbPriceValue == 0 && jdPriceValue == 0) {
+                        return {
+                            'updates': `-Manual- Couldn't get any values \n${seriesSelected}`,
+                            'status': 'Manual',
+                        };
+                    }
                     kbbPriceValue = kbbPriceValue + 500;
                     extraText.push(`\n\t\tKBB Retail Adjusted Value($${kbbRetailValue})`);
 
