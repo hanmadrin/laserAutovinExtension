@@ -2038,9 +2038,9 @@ const contentSetup = async (position = null) => {
                             mmcOffer = sellerPrice - mimimumDifference;
                             extraText.push(`\n\t\t mmcOffer should be: $${mmcOffer} (seler price $${sellerPrice} - minimm difference $${mimimumDifference})`)
                         }
-                        if (mmcOffer <= 0) {
+                        if (mmcOffer <= 500) {
                             return {
-                                'updates': `-Manual- Program says mmc offer is zero or less${extraText.join('')}`,
+                                'updates': `-Manual- Program says mmc offer is 500 or less${extraText.join('')}`,
                                 'status': 'Manual',
                             };
                         } else if (sellerPrice - mmcOffer > maximumPriceDifferenece) {
