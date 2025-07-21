@@ -259,7 +259,8 @@ const getEstDate = () => {
     return date.toLocaleString('en-US', {
         timeZone: 'America/New_York',
         month: '2-digit',
-        day: '2-digit'
+        day: '2-digit',
+        year: '2-digit',
     });
 }
 const dynamicAppraisal = async (info) => {
