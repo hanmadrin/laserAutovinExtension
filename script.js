@@ -1576,7 +1576,7 @@ const popupSetup = async () => {
     });
     document.body.appendChild(saveButton);
 };
-
+let waitingCount = 0;
 const contentSetup = async (position = null) => {
     await sleep(5000);
     console.log(window.location.href);
@@ -1605,6 +1605,13 @@ const contentSetup = async (position = null) => {
                     showDataOnConsole('waiting...');
                     consoleBoard.style.backgroundColor = 'yellow';
                     await sleep(300 * 1000);
+                    waitingCount++;
+                    if (waitingCount > 5) {
+                        // window.location.href = 
+                        // reload
+                        window.location.reload();
+                        return false;
+                    }
                     await contentSetup('noItemInLocalDB');
                     return false;
                 } else if (newItem.action == 'collectNewItem') {
